@@ -3,16 +3,39 @@
 <head>
   <title>Lazer Store</title>
   <style>
-    body { font-family: sans-serif; background: #111; color: white; padding: 2rem; }
-    .product { border: 1px solid #444; padding: 1rem; margin-bottom: 1rem; }
+    body { font-family: sans-serif; background: #111; color: #fff; margin: 0; padding: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+    .card {
+      background: #222; padding: 15px; border-radius: 10px; box-shadow: 0 0 10px #000;
+    }
+    .card img { width: 100%; border-radius: 5px; }
+    .card h2 { margin: 10px 0 5px; }
+    .card p { font-size: 14px; }
+    .card a { display: inline-block; margin-top: 10px; background: #0af; color: #fff; padding: 8px 12px; border-radius: 5px; text-decoration: none; }
   </style>
 </head>
 <body>
-  <h1>Welcome to the Lazer Store</h1>
-  <div class="product">
-    <h2>Cool Game Asset</h2>
-    <p>Only $3.99</p>
-    <a href="https://payhip.com/YOUR_LINK" target="_blank">Buy Now</a>
-  </div>
+
+  <h1>Lazer Store / Portfolio</h1>
+  <div class="grid" id="productGrid"></div>
+
+  <script>
+    fetch('products.json')
+      .then(res => res.json())
+      .then(products => {
+        const container = document.getElementById('productGrid');
+        products.forEach(item => {
+          container.innerHTML += `
+            <div class="card">
+              <img src="${item.image}" alt="${item.title}">
+              <h2>${item.title}</h2>
+              <p>${item.description}</p>
+              <strong>${item.price}</strong><br>
+              <a href="${item.link}" target="_blank">View</a>
+            </div>
+          `;
+        });
+      });
+  </script>
 </body>
 </html>

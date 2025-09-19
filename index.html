@@ -1,41 +1,426 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Lazer Store</title>
-  <style>
-    body { font-family: sans-serif; background: #111; color: #fff; margin: 0; padding: 20px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-    .card {
-      background: #222; padding: 15px; border-radius: 10px; box-shadow: 0 0 10px #000;
-    }
-    .card img { width: 100%; border-radius: 5px; }
-    .card h2 { margin: 10px 0 5px; }
-    .card p { font-size: 14px; }
-    .card a { display: inline-block; margin-top: 10px; background: #0af; color: #fff; padding: 8px 12px; border-radius: 5px; text-decoration: none; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipz28146 - Portfolio</title>
+    <style>
+        /* --- General Page Styles --- */
+        body {
+            background-color: #4B0000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #E0E0E0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* --- Header and Content Styles --- */
+        header {
+            margin-bottom: 40px;
+            color: #F8F8F8;
+        }
+        h1 {
+            font-size: 3.5em;
+            color: #FFFFFF;
+            margin-bottom: 0.1em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .tagline {
+            font-size: 1.3em;
+            color: #CCCCCC;
+            margin-top: 0;
+        }
+        .content {
+            width: 90%;
+            max-width: 800px;
+            background-color: rgba(30, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 40px;
+        }
+        .content h2 {
+            font-size: 2.2em;
+            color: #F8F8F8;
+            margin-bottom: 20px;
+        }
+        .content p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* --- Project Section Styles --- */
+        #my-projects {
+            width: 90%;
+            max-width: 800px;
+            background-color: rgba(30, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #my-projects.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #my-projects h2 {
+            font-size: 2.5em;
+            color: #FFFFFF;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* --- Search Bar & Buttons --- */
+        #search-bar {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(50, 0, 0, 0.7);
+            color: #E0E0E0;
+            margin-bottom: 25px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        #search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        #search-bar:focus {
+            border-color: #FFDDC1;
+        }
+
+        .btn {
+            background-color: #8B0000;
+            color: white;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #A00000;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* --- Project List Items --- */
+        #project-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        #project-list li {
+            background-color: rgba(50, 0, 0, 0.7);
+            padding: 25px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        #project-list li:hover {
+            background-color: rgba(70, 0, 0, 0.8);
+            transform: translateY(-2px);
+        }
+        #project-list li a {
+            text-decoration: none;
+            color: #FFDDC1;
+            font-weight: bold;
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 8px;
+        }
+        #project-list li p {
+            color: #E0E0E0;
+            font-size: 1em;
+            line-height: 1.5;
+            margin-top: 5px;
+        }
+        .hidden-project {
+            display: none;
+        }
+        
+        /* --- Project Detail Modal --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #330000;
+            padding: 40px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        .modal.visible .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .close-btn {
+            color: #ccc;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .close-btn:hover {
+            color: #fff;
+        }
+        .modal-content h3 {
+            font-size: 2.5em;
+            color: #FFDDC1;
+            margin-top: 0;
+        }
+        .modal-content p {
+            font-size: 1.1em;
+            color: #E0E0E0;
+        }
+        .modal-content .btn {
+            margin-top: 30px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+        }
+
+        /* --- Social/Support Buttons Section --- */
+        .social-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+            gap: 20px;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            .tagline { font-size: 1.1em; }
+            .content, #my-projects, .social-buttons { padding: 25px; width: 95%; }
+            .btn { width: 90%; padding: 15px; font-size: 1.1em; }
+            #my-projects h2 { font-size: 2em; }
+            #project-list li { padding: 20px; }
+            .modal-content { padding: 30px; }
+            .modal-content h3 { font-size: 2em; }
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>Eclipz28146</h1>
+        <p class="tagline">Game Dev | Software Engineer | Coder</p>
+    </header>
+    <main class="content">
+        <h2>About Me</h2>
+        <p>
+            I'm a passionate developer who loves to create engaging experiences, from interactive games to robust software solutions. 
+            Welcome to my digital hub, where you can find my work, connect with me, and more.
+        </p>
+        <button id="toggleProjectsBtn" class="btn">View My Projects</button>
+    </main>
+    <section id="my-projects" class="">
+        <h2>My Projects</h2>
+        <input type="text" id="search-bar" placeholder="Search projects...">
+        <ul id="project-list">
+            <!-- Project list will be dynamically populated here -->
+            <li id="loading-message" style="background: none; box-shadow: none; text-align: center;">Loading projects...</li>
+        </ul>
+        <button id="show-all-btn" class="btn hidden-project">Show All Projects</button>
+    </section>
 
-  <h1>Lazer Store / Portfolio</h1>
-  <div class="grid" id="productGrid"></div>
+    <!-- Project Detail Modal -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title"></h3>
+            <p id="modal-description"></p>
+            <a id="modal-download-btn" class="btn" target="_blank" rel="noopener noreferrer">
+                Go to GitHub Repository
+            </a>
+        </div>
+    </div>
+    
+    <div class="social-buttons">
+        <a href="https://discord.gg/your-invite-link" class="btn" target="_blank" rel="noopener noreferrer">
+            Join My Discord
+        </a>
+        <a href="#" class="btn" style="opacity: 0.7; cursor: not-allowed;">
+            Support My Work (Coming Soon)
+        </a>
+    </div>
 
-  <script>
-    fetch('products.json')
-      .then(res => res.json())
-      .then(products => {
-        const container = document.getElementById('productGrid');
-        products.forEach(item => {
-          container.innerHTML += `
-            <div class="card">
-              <img src="${item.image}" alt="${item.title}">
-              <h2>${item.title}</h2>
-              <p>${item.description}</p>
-              <strong>${item.price}</strong><br>
-              <a href="${item.link}" target="_blank">View</a>
-            </div>
-          `;
+    <script>
+        const username = 'eclipz28146';
+        const projectList = document.getElementById('project-list');
+        const projectsSection = document.getElementById('my-projects');
+        const toggleBtn = document.getElementById('toggleProjectsBtn');
+        const showAllBtn = document.getElementById('show-all-btn');
+        const searchBar = document.getElementById('search-bar');
+        const loadingMessage = document.getElementById('loading-message');
+        const modal = document.getElementById('project-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDescription = document.getElementById('modal-description');
+        const modalDownloadBtn = document.getElementById('modal-download-btn');
+        const closeModalBtn = document.querySelector('.close-btn');
+
+        let allProjects = [];
+
+        const renderProjects = (projectsToRender) => {
+            projectList.innerHTML = '';
+            projectsToRender.forEach(repo => {
+                const listItem = document.createElement('li');
+                listItem.dataset.name = repo.name;
+                listItem.dataset.description = repo.description || '';
+                
+                const repoLink = document.createElement('a');
+                repoLink.href = repo.html_url;
+                repoLink.textContent = repo.name;
+                repoLink.target = '_blank';
+                repoLink.addEventListener('click', (e) => e.stopPropagation()); // Prevent modal from opening
+
+                const repoDescription = document.createElement('p');
+                repoDescription.textContent = repo.description || "No description provided.";
+                
+                listItem.appendChild(repoLink);
+                listItem.appendChild(repoDescription);
+                projectList.appendChild(listItem);
+
+                // Add click listener to show the modal
+                listItem.addEventListener('click', () => {
+                    modalTitle.textContent = repo.name;
+                    modalDescription.textContent = repo.description || "No description available for this project.";
+                    modalDownloadBtn.href = repo.html_url; // Link to the repo for "download"
+                    modal.style.display = 'flex';
+                    setTimeout(() => modal.classList.add('visible'), 10);
+                });
+            });
+        };
+
+        const fetchProjects = async () => {
+            try {
+                const response = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
+                if (!response.ok) {
+                    throw new Error(`GitHub API error: ${response.statusText}`);
+                }
+                const repos = await response.json();
+                
+                // Exclude the specified repository
+                const filteredRepos = repos.filter(repo => repo.name !== 'Eclipz.Store.github.io');
+                
+                // Sort repositories by star count (most popular first)
+                allProjects = filteredRepos.sort((a, b) => b.stargazers_count - a.stargazers_count);
+
+                // Initially render only the top 5 projects
+                renderProjects(allProjects.slice(0, 5));
+
+                if (allProjects.length > 5) {
+                    showAllBtn.classList.remove('hidden-project');
+                }
+
+            } catch (error) {
+                loadingMessage.textContent = 'Failed to load projects. Please try again later.';
+                console.error('Error fetching projects:', error);
+            }
+        };
+
+        // --- Event Listeners ---
+        let hasFetched = false;
+        toggleBtn.addEventListener('click', function() {
+            if (!projectsSection.classList.contains('visible')) {
+                projectsSection.classList.add('visible');
+                this.textContent = 'Hide Projects';
+                projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (!hasFetched) {
+                    loadingMessage.style.display = 'block';
+                    fetchProjects();
+                    hasFetched = true;
+                }
+            } else {
+                projectsSection.classList.remove('visible');
+                this.textContent = 'View My Projects';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         });
-      });
-  </script>
+
+        // Toggle between showing top 5 and all
+        showAllBtn.addEventListener('click', () => {
+            if (showAllBtn.textContent === 'Show All Projects') {
+                renderProjects(allProjects);
+                showAllBtn.textContent = 'Show Less';
+            } else {
+                renderProjects(allProjects.slice(0, 5));
+                showAllBtn.textContent = 'Show All Projects';
+                projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+
+        // Search functionality
+        searchBar.addEventListener('input', () => {
+            const query = searchBar.value.toLowerCase();
+            const projectItems = document.querySelectorAll('#project-list li');
+            
+            projectItems.forEach(item => {
+                const name = item.dataset.name.toLowerCase();
+                const description = item.dataset.description.toLowerCase();
+                if (name.includes(query) || description.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Close modal on button click or outside click
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('visible');
+            setTimeout(() => modal.style.display = 'none', 300);
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                modal.classList.remove('visible');
+                setTimeout(() => modal.style.display = 'none', 300);
+            }
+        });
+    </script>
 </body>
 </html>
